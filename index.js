@@ -2,7 +2,7 @@ const login = require("fca-unofficial");
 const fs = require("fs");
 
 // --- কনফিগারেশন ---
-const ADMIN_ID = "7707686630"; // আপনার ফেসবুক ইউজার আইডি
+const ADMIN_ID = "61584224923245"; // আপনার ফেসবুক ইউজার আইডি
 const PAYMENT_NUMBER = "01704400069";
 
 // ডাটাবেজ (মেমোরিতে)
