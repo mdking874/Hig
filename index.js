@@ -1,7 +1,8 @@
-const login = require("fca-project-orion");
+const login = require("fca-horizon-remake");
 const fs = require("fs-extra");
 const express = require("express");
 
+// Render Health Check
 const app = express();
 const port = process.env.PORT || 8000;
 app.get("/", (req, res) => res.send("Bot is Alive!"));
@@ -19,16 +20,14 @@ let round3Teams = [];
 let registeredIDs = new Set();
 let tempRegData = {}; 
 
-const loginConfig = { appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8')) };
+// লগইন ফাংশন
+const appState = JSON.parse(fs.readFileSync('appstate.json', 'utf8'));
 
-login(loginConfig, (err, api) => {
-    if(err) {
-        console.error("লগইন এরর: আপনার appstate.json সম্ভবত এক্সপায়ার হয়েছে। নতুন কুকি দিন।");
-        return;
-    }
+login({ appState }, (err, api) => {
+    if(err) return console.error("লগইন এরর! নতুন Appstate দিন।");
 
     api.setOptions({ listenEvents: true, selfListen: false, forceLogin: true });
-    console.log("বট সফলভাবে মেসেঞ্জারে চালু হয়েছে!");
+    console.log("বট সফলভাবে চালু হয়েছে!");
 
     api.listenMqtt((err, event) => {
         if(err) return;
@@ -59,7 +58,7 @@ login(loginConfig, (err, api) => {
                         api.sendMessage(`🎊 অভিনন্দন ${winner.name}! Round 2 কোয়ালিফাই করেছেন! 🏆`, winner.id);
                         api.sendMessage(`✅ ${winner.name} যুক্ত হয়েছে।`, ADMIN_ID);
                     }
-                } catch(e) { api.sendMessage("❌ ভুল কমান্ড। উদা: Win A 5", threadID); }
+                } catch(e) { api.sendMessage("❌ উদা: Win A 5", threadID); }
                 return;
             }
         }
@@ -91,7 +90,7 @@ login(loginConfig, (err, api) => {
 
         if (regMode === "paid" && tempRegData[senderID] && !registeredIDs.has(senderID) && body.length > 5) {
             api.sendMessage(`🔔 পেমেন্ট চেক: ${tempRegData[senderID].name}\nTxID: ${body}`, ADMIN_ID);
-            api.sendMessage("⏳ আপনার তথ্য পাঠানো হয়েছে। অ্যাডমিন চেক করছে।", threadID);
+            api.sendMessage("⏳ তথ্য পাঠানো হয়েছে। অ্যাডমিন চেক করছে।", threadID);
         }
     });
 });
@@ -107,4 +106,4 @@ function completeRegistration(uid, tid, api, groupLetter) {
         confirmedTeams = [];
         api.sendMessage(`🔥 Group ${groupLetter} Full!`, ADMIN_ID);
     }
-}
+        }
