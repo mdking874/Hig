@@ -1,0 +1,12 @@
+{
+  "name": "messenger-tournament-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "fca-unofficial": "^1.3.10",
+    "fs": "^0.0.1-security"
+  }
+}
